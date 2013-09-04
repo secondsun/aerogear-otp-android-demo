@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +31,9 @@ import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.pipeline.AbstractActivityCallback;
 
 import java.util.List;
+import org.jboss.aerogear.android.pipeline.support.AbstractFragmentActivityCallback;
 
-public class OTPLoginActivity extends Activity {
+public class OTPLoginActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,11 +54,11 @@ public class OTPLoginActivity extends Activity {
 
                 final ProgressDialog dialog = ProgressDialog.show(OTPLoginActivity.this, "Wait...", "Loging", true, true);
 
-                application.login(OTPLoginActivity.this, user, pass, new AbstractActivityCallback<HeaderAndBody>() {
+                application.login(OTPLoginActivity.this, user, pass, new AbstractFragmentActivityCallback<HeaderAndBody>() {
                     @Override
                     public void onSuccess(HeaderAndBody data) {
                         try {
-                            application.retrieveOTPPath(OTPLoginActivity.this, new AbstractActivityCallback<List<OTPUser>>() {
+                            application.retrieveOTPPath(OTPLoginActivity.this, new AbstractFragmentActivityCallback<List<OTPUser>>() {
                                 @Override
                                 public void onSuccess(List<OTPUser> data) {
                                     Intent intent = new Intent(OTPLoginActivity.this, OTPDisplay.class);
@@ -67,17 +69,17 @@ public class OTPLoginActivity extends Activity {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    displayErrorMessage(getActivity(), e, dialog);
+                                    displayErrorMessage(getFragmentActivity(), e, dialog);
                                 }
                             });
                         } catch (Exception e) {
-                            displayErrorMessage(getActivity(), e, dialog);
+                            displayErrorMessage(getFragmentActivity(), e, dialog);
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        displayErrorMessage(getActivity(), e, dialog);
+                        displayErrorMessage(getFragmentActivity(), e, dialog);
                         dialog.dismiss();
                     }
                 });
