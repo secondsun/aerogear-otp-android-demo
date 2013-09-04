@@ -25,10 +25,55 @@
     <packaging>apk</packaging>
     <name>OTP Android Demo</name>
 
+    <parent>
+        <groupId>org.jboss.aerogear</groupId>
+        <artifactId>aerogear-parent</artifactId>
+        <version>0.1.0</version>
+    </parent>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <distribution>repo</distribution>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>passos</id>
+            <name>Daniel Passos</name>
+            <url>http://passos.me/</url>
+            <email>dpassos@redhat.com</email>
+        </developer>
+
+        <developer>
+            <id>secondsun</id>
+            <name>Summers Pittman</name>
+            <url>http://blog.sagaoftherealms.net/</url>
+            <email>supittma@redhat.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:aerogear/aerogear-otp-android-demo.git</connection>
+        <developerConnection>scm:git:git@github.com:aerogear/aerogear-otp-android-demo.git</developerConnection>
+        <url>git@github.com:aerogear/aerogear-otp-android-demo.git</url>
+    </scm>
+
     <properties>
+        <android.version>4.0.1.2</android.version>
+        <aerogear.version>1.2.0</aerogear.version>
+        <otp.version>1.0.0</otp.version>
+
+        <maven.android.plugin.verson>3.6.0</maven.android.plugin.verson>
+        <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
+        <java.version>1.6</java.version>
+
+        <android.avd>15</android.avd>
+        <android.platform>17</android.platform>
+        <android.debug>true</android.debug>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <debug>true</debug>
-        <android.avd>9</android.avd>
         <proguard.skip>true</proguard.skip>
     </properties>
 
@@ -36,21 +81,29 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>4.0.1.2</version>
+            <version>${android.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.aerogear</groupId>
             <artifactId>aerogear-android</artifactId>
-            <version>1.2.0</version>
             <type>apklib</type>
+            <version>${aerogear.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.aerogear</groupId>
+            <artifactId>aerogear-android</artifactId>
+            <scope>provided</scope>
+            <type>jar</type>
+            <version>${aerogear.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.aerogear</groupId>
             <artifactId>aerogear-otp-java</artifactId>
-            <version>1.0.0</version>
+            <version>${otp.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -64,7 +117,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>${maven.android.plugin.verson}</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>
@@ -73,10 +126,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -84,8 +137,11 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <configuration>
                     <run>
-                        <debug>${debug}</debug>
+                        <debug>${android.debug}</debug>
                     </run>
+                    <sdk>
+                        <platform>${android.platform}</platform>
+                    </sdk>
                     <emulator>
                         <avd>${android.avd}</avd>
                     </emulator>
