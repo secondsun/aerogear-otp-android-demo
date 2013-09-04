@@ -17,6 +17,7 @@
  
 package org.aerogear.otp.android.demo;
 
+import android.app.Activity;
 import android.app.Application;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.Pipeline;
@@ -34,24 +35,27 @@ import java.util.List;
 
 public class OTPApplication extends Application {
 
-    private AuthenticationModule authModule;
     private String baseURL = "http://controller-aerogear.rhcloud.com/aerogear-controller-demo";
+    private Authenticator authenticator;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        Authenticator auth = new Authenticator(baseURL);
+        authenticator = new Authenticator(baseURL);
         AuthenticationConfig config = new AuthenticationConfig();
         config.setLoginEndpoint("/login");
-        authModule = auth.auth("login", config);
+        authenticator.auth("login", config);
     }
 
-    public void login(String username, String password, Callback<HeaderAndBody> callback) {
+    public void login(Activity activity, String username, String password, Callback<HeaderAndBody> callback) {
+        AuthenticationModule authModule = authenticator.get("login", activity);
         authModule.login(username, password, callback);
     }
 
-    public void retrieveOTPPath(Callback<List<OTPUser>> callback) throws Exception {
+    public void retrieveOTPPath(Activity activity, Callback<List<OTPUser>> callback) throws Exception {
+        AuthenticationModule authModule = authenticator.get("login", activity);
+
         URL url = new URL(baseURL);
 
         Pipeline pipeline = new Pipeline(url);
@@ -67,6 +71,7 @@ public class OTPApplication extends Application {
     }
 
     public void logout(Callback<Void> callback) {
+        AuthenticationModule authModule = authenticator.get("login");
         authModule.logout(callback);
     }
 

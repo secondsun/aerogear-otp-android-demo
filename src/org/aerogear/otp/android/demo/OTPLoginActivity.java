@@ -26,8 +26,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.pipeline.AbstractActivityCallback;
 
 import java.util.List;
 
@@ -52,11 +52,11 @@ public class OTPLoginActivity extends Activity {
 
                 final ProgressDialog dialog = ProgressDialog.show(OTPLoginActivity.this, "Wait...", "Loging", true, true);
 
-                application.login(user, pass, new Callback<HeaderAndBody>() {
+                application.login(OTPLoginActivity.this, user, pass, new AbstractActivityCallback<HeaderAndBody>() {
                     @Override
                     public void onSuccess(HeaderAndBody data) {
                         try {
-                            application.retrieveOTPPath(new Callback<List<OTPUser>>() {
+                            application.retrieveOTPPath(OTPLoginActivity.this, new AbstractActivityCallback<List<OTPUser>>() {
                                 @Override
                                 public void onSuccess(List<OTPUser> data) {
                                     Intent intent = new Intent(OTPLoginActivity.this, OTPDisplay.class);
@@ -67,17 +67,17 @@ public class OTPLoginActivity extends Activity {
 
                                 @Override
                                 public void onFailure(Exception e) {
-                                    displayErrorMessage(e, dialog);
+                                    displayErrorMessage(getActivity(), e, dialog);
                                 }
                             });
                         } catch (Exception e) {
-                            displayErrorMessage(e, dialog);
+                            displayErrorMessage(getActivity(), e, dialog);
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        displayErrorMessage(e, dialog);
+                        displayErrorMessage(getActivity(), e, dialog);
                         dialog.dismiss();
                     }
                 });
@@ -85,9 +85,9 @@ public class OTPLoginActivity extends Activity {
         });
     }
 
-    private void displayErrorMessage(Exception e, ProgressDialog dialog) {
+    private void displayErrorMessage(Activity activity, Exception e, ProgressDialog dialog) {
         Log.e("Login", "An error occurrence", e);
-        Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Login failed", Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     }
 
