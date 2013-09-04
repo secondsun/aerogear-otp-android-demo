@@ -27,6 +27,9 @@ import org.jboss.aerogear.security.otp.Totp;
 
 public class OTPDisplay extends Activity {
 
+    private static final int COUNTDOWN_DURATION = 30000;
+    private static final int COUNTDOWN_STEP = 100; // only 100 ms for smoother action
+
     private TextView totpDisplay;
     private TextView nameDisplay;
     private ProgressBar progressBar;
@@ -47,10 +50,12 @@ public class OTPDisplay extends Activity {
 
         updateOTP();
 
-        new CountDownTimer(30000, 1000) {
+        progressBar.setMax(COUNTDOWN_DURATION / COUNTDOWN_STEP);
+
+        new CountDownTimer(COUNTDOWN_DURATION, COUNTDOWN_STEP) {
             @Override
             public void onTick(long millisUntilFinished) {
-                progressBar.setProgress((int) (millisUntilFinished / 1000));
+                progressBar.setProgress((int) (millisUntilFinished / COUNTDOWN_STEP));
             }
 
             @Override
